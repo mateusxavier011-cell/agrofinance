@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroFinance</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --bg:#05080f;--bg2:#0a0f1a;--bg3:#0f1628;--bg4:#141e35;--bg5:#1a2540;
+  --bdr:#1c2a45;--bdr2:#243558;
+  --blue:#4d8ef0;--blue2:#3b82f6;--blue3:#1d4ed8;--blue4:#1e3a8a;
+  --red:#f87171;--yellow:#fbbf24;--green:#4ade80;--purple:#a78bfa;--orange:#fb923c;--cyan:#22d3ee;
+  --txt:#e8effe;--txt2:#7b9fd4;--txt3:#344f7a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100vh;background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--bdr2);}
+
+/* LAYOUT */
+.screen{display:none;flex-direction:column;min-height:100vh;max-width:640px;margin:0 auto;}
+.screen.on{display:flex;}
+.topbar{position:sticky;top:0;z-index:90;background:var(--bg2);border-bottom:1px solid var(--bdr);padding:13px 16px;display:flex;align-items:center;gap:10px;}
+.tb-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-sub{font-size:11px;color:var(--txt3);margin-top:1px;}
+.body{flex:1;padding:16px;display:flex;flex-direction:column;gap:14px;}
+.bottomnav{position:sticky;bottom:0;z-index:90;background:var(--bg2);border-top:1px solid var(--bdr);display:flex;}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border:none;background:none;cursor:pointer;color:var(--txt3);font-size:9px;font-weight:700;font-family:'DM Sans',sans-serif;letter-spacing:.3px;}
+.bnav .ico{font-size:20px;}
+.bnav.on{color:var(--blue);}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:16px;}
+.card-t{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--txt2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px;}
+.icard{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:14px;margin-bottom:10px;}
+.icard:last-child{margin-bottom:0;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--bg3),var(--bg4));border:1px solid var(--bdr2);border-radius:18px;padding:20px 18px;}
+.hero-v{font-family:'Syne',sans-serif;font-weight:800;font-size:34px;line-height:1;}
+.hero-l{font-size:12px;color:var(--txt3);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+
+/* STATS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.stat{background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:14px;}
+.stat-v{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;line-height:1.1;}
+.stat-l{font-size:11px;color:var(--txt3);margin-top:4px;font-weight:600;}
+
+/* BTNS */
+.btn{border:none;border-radius:10px;cursor:pointer;font-weight:700;font-family:'DM Sans',sans-serif;}
+.btn:active{opacity:.8;}
+.b-blue{background:var(--blue3);color:#fff;padding:12px 18px;font-size:14px;}
+.b-out{background:transparent;color:var(--txt2);padding:11px 16px;font-size:13px;border:1px solid var(--bdr2);}
+.b-ghost{background:var(--bg3);color:var(--txt2);padding:8px 13px;font-size:12px;border:1px solid var(--bdr);}
+.b-red{background:#2d0a0a;color:var(--red);padding:6px 11px;font-size:12px;border:1px solid #5a1a1a;}
+.b-ok{background:#0d1f3d;color:var(--green);padding:6px 11px;font-size:12px;border:1px solid #1a3a6a;}
+.b-pdf{background:#150d2a;color:var(--purple);padding:10px 14px;font-size:13px;border:1px solid #2e1a50;width:100%;}
+.b-sm{padding:7px 12px;font-size:12px;}
+.b-full{width:100%;}
+.b-icon{background:var(--bg3);color:var(--txt2);padding:8px 10px;font-size:13px;border:1px solid var(--bdr);border-radius:8px;}
+
+/* INPUTS */
+.inp{background:var(--bg);border:1px solid var(--bdr2);border-radius:10px;color:var(--txt);padding:11px 13px;width:100%;font-size:14px;outline:none;font-family:'DM Sans',sans-serif;}
+.inp:focus{border-color:var(--blue2);}
+select.inp option{background:var(--bg2);}
+.lbl{font-size:11px;color:var(--txt2);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;display:block;}
+.fg{display:flex;flex-direction:column;margin-bottom:12px;}
+.fg:last-child{margin-bottom:0;}
+.row2{display:flex;gap:10px;}.row2 .fg{flex:1;}
+
+/* MODAL */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.mbg.on{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--bdr2);border-top:2px solid var(--blue3);border-radius:22px 22px 0 0;padding:20px 18px 36px;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;}
+.mhandle{width:36px;height:4px;background:var(--bdr2);border-radius:2px;margin:0 auto 18px;}
+.mt{font-family:'Syne',sans-serif;font-weight:800;font-size:19px;margin-bottom:18px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.bv-green{background:#0a2010;color:var(--green);}
+.bv-blue{background:#0d1f3d;color:var(--blue);}
+.bv-yellow{background:#2d1f00;color:var(--yellow);}
+.bv-red{background:#2d0a0a;color:var(--red);}
+.bv-purple{background:#1a1030;color:var(--purple);}
+.bv-orange{background:#2d1500;color:var(--orange);}
+.bv-cyan{background:#0a2028;color:var(--cyan);}
+.bv-open{background:#2d1f00;color:var(--yellow);}
+.bv-paid{background:#0a2010;color:var(--green);}
+
+/* AVATAR */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;}
+
+/* COR PICKER */
+.cpick{display:flex;gap:9px;flex-wrap:wrap;}
+.copt{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s;}
+.copt.sel{border:3px solid #fff;transform:scale(1.18);}
+
+/* SETUP */
+.setup-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px 20px;}
+.setup-logo{width:68px;height:68px;background:linear-gradient(135deg,var(--blue2),var(--blue4));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:18px;box-shadow:0 8px 32px #3b82f633;}
+.setup-form{width:100%;max-width:420px;}
+
+/* FAZENDA CARD */
+.fcard{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:16px 14px;cursor:pointer;display:flex;align-items:center;gap:13px;margin-bottom:10px;}
+.fcard:active{background:var(--bg3);}
+.ficon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+
+/* ATIVIDADE CARD */
+.acard{background:var(--bg3);border:1px solid var(--bdr);border-radius:14px;padding:14px 13px;cursor:pointer;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.acard:active{background:var(--bg4);}
+.aicon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+
+/* TABS */
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{padding:7px 15px;border-radius:20px;cursor:pointer;font-weight:700;font-size:12px;border:1px solid var(--bdr2);background:var(--bg3);color:var(--txt3);white-space:nowrap;}
+.tab.on{background:var(--blue3);color:#fff;border-color:var(--blue3);}
+
+/* LOTE BADGE */
+.lbadge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:var(--bg4);color:var(--cyan);border:1px solid #1a3a50;}
+
+/* COLLAPSE */
+.chd{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.cbd{display:none;margin-top:12px;}.cbd.on{display:block;}
+
+/* CR ROW */
+.crrow{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--bdr2);border-radius:10px;margin-bottom:8px;}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 16px;color:var(--txt3);}
+.empty-ico{font-size:46px;margin-bottom:10px;}
+
+/* DIVIDER */
+hr.dv{border:none;border-top:1px solid var(--bdr);margin:10px 0;}
+</style>
+</head>
+<body>
+
+<!-- ═══ SETUP (primeira vez) ═══ -->
+<div class="screen on" id="sc-setup">
+  <div class="setup-wrap">
+    <div class="setup-logo">💰</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;text-align:center;margin-bottom:6px;">AgroFinance</div>
+    <div style="color:var(--txt3);font-size:14px;text-align:center;margin-bottom:28px;">Cadastre sua fazenda para começar</div>
+    <div class="setup-form">
+      <div class="fg"><label class="lbl">Nome da Fazenda *</label>
+        <input class="inp" id="sf-nome" placeholder="ex: Fazenda Santa Luzia">
+      </div>
+      <div class="fg"><label class="lbl">Responsável</label>
+        <input class="inp" id="sf-resp" placeholder="ex: João Silva (opcional)">
+      </div>
+      <div class="fg"><label class="lbl">Cor</label>
+        <div class="cpick" id="sf-cp">
+          <div class="copt sel" data-c="#3b82f6" style="background:#3b82f6" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#4ade80" style="background:#4ade80" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#f87171" style="background:#f87171" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#fbbf24" style="background:#fbbf24" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#a78bfa" style="background:#a78bfa" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#fb923c" style="background:#fb923c" onclick="pc(this,'sf')"></div>
+          <div class="copt" data-c="#22d3ee" style="background:#22d3ee" onclick="pc(this,'sf')"></div>
+        </div>
+      </div>
+      <button class="btn b-blue b-full" onclick="setupCriar()">Criar Fazenda →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAZENDAS (lista) ═══ -->
+<div class="screen" id="sc-fazendas">
+  <div class="topbar">
+    <div class="setup-logo" style="width:34px;height:34px;font-size:17px;border-radius:9px;margin:0;flex-shrink:0;">💰</div>
+    <div style="flex:1"><div class="tb-title">AgroFinance</div></div>
+    <button class="btn b-ghost b-sm" onclick="om('md-nf')">+ Fazenda</button>
+  </div>
+  <div class="body" id="bd-fazendas"></div>
+</div>
+
+<!-- ═══ ATIVIDADES (dentro de uma fazenda) ═══ -->
+<div class="screen" id="sc-atividades">
+  <div class="topbar">
+    <button class="btn b-ghost b-sm" onclick="goFazendas()">‹</button>
+    <div style="flex:1"><div class="tb-title" id="tt-faz">—</div><div class="tb-sub" id="ts-faz">—</div></div>
+    <button class="btn b-ghost b-sm" onclick="om('md-natv')">+ Atividade</button>
+    <button class="btn b-ghost b-sm" onclick="om('md-cred')">👤 Credores</button>
+  </div>
+  <div class="body" id="bd-atividades"></div>
+</div>
+
+<!-- ═══ INTERNA (dentro de uma atividade) ═══ -->
+<div class="screen" id="sc-interna">
+  <div class="topbar">
+    <button class="btn b-ghost b-sm" onclick="goAtividades()">‹</button>
+    <div style="flex:1"><div class="tb-title" id="tt-atv">—</div><div class="tb-sub" id="ts-atv">—</div></div>
+    <button class="btn b-ghost b-sm" onclick="om('md-cred')">👤</button>
+  </div>
+  <div class="body" id="bd-interna"></div>
+  <div class="bottomnav">
+    <button class="bnav on" id="bn-dash" onclick="setTab('dash')"><span class="ico">📊</span>Painel</button>
+    <button class="bnav" id="bn-desp" onclick="setTab('desp')"><span class="ico">💸</span>Despesas</button>
+    <button class="bnav" id="bn-rec" onclick="setTab('rec')"><span class="ico">💵</span>Receitas</button>
+    <button class="bnav" id="bn-contas" onclick="setTab('contas')"><span class="ico">👥</span>Contas</button>
+    <button class="bnav" id="bn-rel" onclick="setTab('rel')"><span class="ico">📋</span>Relatório</button>
+  </div>
+</div>
+
+<!-- ════ MODAIS ════ -->
+
+<!-- Nova Fazenda -->
+<div class="mbg" id="md-nf"><div class="modal">
+  <div class="mhandle"></div><div class="mt">🏡 Nova Fazenda</div>
+  <div class="fg"><label class="lbl">Nome *</label><input class="inp" id="nf-nome" placeholder="ex: Fazenda Boa Vista"></div>
+  <div class="fg"><label class="lbl">Responsável</label><input class="inp" id="nf-resp" placeholder="opcional"></div>
+  <div class="fg"><label class="lbl">Cor</label><div class="cpick" id="nf-cp">
+    <div class="copt sel" data-c="#3b82f6" style="background:#3b82f6" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#4ade80" style="background:#4ade80" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#f87171" style="background:#f87171" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#fbbf24" style="background:#fbbf24" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#a78bfa" style="background:#a78bfa" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#fb923c" style="background:#fb923c" onclick="pc(this,'nf')"></div>
+    <div class="copt" data-c="#22d3ee" style="background:#22d3ee" onclick="pc(this,'nf')"></div>
+  </div></div>
+  <div style="display:flex;gap:10px">
+    <button class="btn b-blue" style="flex:1" onclick="criarFazenda()">Criar</button>
+    <button class="btn b-out" style="flex:1" onclick="cm('md-nf')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- Nova Atividade -->
+<div class="mbg" id="md-natv"><div class="modal">
+  <div class="mhandle"></div><div class="mt">➕ Nova Atividade</div>
+  <div class="fg"><label class="lbl">Tipo *</label>
+    <select class="inp" id="na-tipo" onchange="onNaTipo()">
+      <option value="🐄|Bovinos">🐄 Bovinos</option>
+      <option value="🐷|Suínos">🐷 Suínos</option>
+      <option value="🐔|Aves">🐔 Aves</option>
+      <option value="🌾|Geral">🌾 Geral</option>
+      <option value="🐟|Piscicultura">🐟 Piscicultura</option>
+      <option value="🐐|Caprinos">🐐 Caprinos</option>
+      <option value="🐑|Ovinos">🐑 Ovinos</option>
+      <option value="🌽|Grãos">🌽 Grãos</option>
+    </select>
+  </div>
+  <div class="fg"><label class="lbl">Nome / Identificação *</label><input class="inp" id="na-nome" placeholder="ex: Bovinos Lote A, Granja 2..."></div>
+  <div class="fg"><label class="lbl">Cor</label><div class="cpick" id="na-cp">
+    <div class="copt sel" data-c="#4ade80" style="background:#4ade80" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#3b82f6" style="background:#3b82f6" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#f87171" style="background:#f87171" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#fbbf24" style="background:#fbbf24" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#a78bfa" style="background:#a78bfa" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#fb923c" style="background:#fb923c" onclick="pc(this,'na')"></div>
+    <div class="copt" data-c="#22d3ee" style="background:#22d3ee" onclick="pc(this,'na')"></div>
+  </div></div>
+  <div style="display:flex;gap:10px">
+    <button class="btn b-blue" style="flex:1" onclick="criarAtividade()">Criar</button>
+    <button class="btn b-out" style="flex:1" onclick="cm('md-natv')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- Gerenciar Lotes (bovinos/suínos/aves) -->
+<div class="mbg" id="md-lotes"><div class="modal">
+  <div class="mhandle"></div><div class="mt" id="md-lotes-title">📦 Lotes</div>
+  <div id="md-lotes-lista"></div>
+  <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px;">
+    <div style="font-size:12px;color:var(--txt2);font-weight:700;margin-bottom:10px;">➕ Novo Lote</div>
+    <div class="fg"><label class="lbl">Nome do Lote *</label><input class="inp" id="nl-nome" placeholder="ex: Lote 01, Turma A, Galpão 2..."></div>
+    <div class="fg"><label class="lbl">Descrição</label><input class="inp" id="nl-desc" placeholder="ex: 50 cabeças Nelore (opcional)"></div>
+    <button class="btn b-blue b-full" onclick="criarLote()">Adicionar Lote</button>
+  </div>
+  <button class="btn b-out b-full" onclick="cm('md-lotes')">Fechar</button>
+</div></div>
+
+<!-- Nova Despesa -->
+<div class="mbg" id="md-desp"><div class="modal">
+  <div class="mhandle"></div><div class="mt">💸 Nova Despesa</div>
+  <div class="fg"><label class="lbl">Categoria *</label>
+    <select class="inp" id="d-cat" onchange="onDCat()">
+      <option>Ração</option><option>Medicamentos</option><option>Mão de obra</option><option>Sal Mineral</option><option>Outros</option>
+    </select>
+  </div>
+  <!-- Lote (só aparece se atividade tiver lotes) -->
+  <div class="fg" id="d-lote-fg" style="display:none"><label class="lbl">Lote</label>
+    <select class="inp" id="d-lote"><option value="">— Sem lote específico —</option></select>
+  </div>
+  <div class="fg"><label class="lbl">Descrição *</label><input class="inp" id="d-desc" placeholder="ex: Ração milho grão"></div>
+  <!-- Ração -->
+  <div id="blk-racao" style="background:#060d1f;border:1px solid #1a2d5a;border-radius:12px;padding:14px;margin-bottom:12px;display:none;">
+    <div style="font-size:12px;color:var(--blue);font-weight:700;margin-bottom:10px;">🌽 CÁLCULO RAÇÃO</div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">Peso (kg)</label><input class="inp" type="number" id="d-kg" placeholder="250" oninput="calcKgV('d-kg','d-vkg','d-val')"></div>
+      <div class="fg"><label class="lbl">R$/kg</label><input class="inp" type="number" id="d-vkg" placeholder="1.80" step="0.01" oninput="calcKgV('d-kg','d-vkg','d-val')"></div>
+    </div>
+  </div>
+  <!-- Sal Mineral -->
+  <div id="blk-sal" style="background:#060d1f;border:1px solid #1a2d5a;border-radius:12px;padding:14px;margin-bottom:12px;display:none;">
+    <div style="font-size:12px;color:var(--blue);font-weight:700;margin-bottom:10px;">🧂 CÁLCULO SAL MINERAL</div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">Peso (kg)</label><input class="inp" type="number" id="d-skg" placeholder="50" oninput="calcKgV('d-skg','d-svkg','d-val')"></div>
+      <div class="fg"><label class="lbl">R$/kg</label><input class="inp" type="number" id="d-svkg" placeholder="4.50" step="0.01" oninput="calcKgV('d-skg','d-svkg','d-val')"></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Valor Total (R$) *</label><input class="inp" type="number" id="d-val" placeholder="450.00" oninput="dDiff()"></div>
+  <div class="fg"><label class="lbl">Data *</label><input class="inp" type="date" id="d-dt"></div>
+  <div class="fg"><label class="lbl">Observação</label><input class="inp" id="d-obs" placeholder="opcional"></div>
+  <!-- Distribuição -->
+  <div style="background:#060d1f;border:1px solid #1a3a6a;border-radius:12px;padding:14px;margin-bottom:12px;">
+    <div style="font-size:12px;color:var(--blue);font-weight:700;margin-bottom:10px;">💳 DISTRIBUIÇÃO PARA CREDORES</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button id="btn-mv" class="btn" style="flex:1;padding:8px;font-size:12px;background:var(--blue3);color:#fff;border-radius:8px;border:none;cursor:pointer;font-weight:700;" onclick="setModo('val')">💰 Por Valor</button>
+      <button id="btn-mp" class="btn" style="flex:1;padding:8px;font-size:12px;background:var(--bg3);color:var(--txt2);border-radius:8px;border:1px solid var(--bdr2);cursor:pointer;font-weight:700;" onclick="setModo('pct')">% Percentual</button>
+    </div>
+    <div id="d-cred-inputs"></div>
+    <div id="d-diff" style="display:none;margin-top:8px;"></div>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn b-blue" style="flex:1" onclick="salvarDesp()">Lançar</button>
+    <button class="btn b-out" style="flex:1" onclick="cm('md-desp')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- Nova Receita -->
+<div class="mbg" id="md-rec"><div class="modal">
+  <div class="mhandle"></div><div class="mt">💵 Nova Receita</div>
+  <div class="fg"><label class="lbl">Tipo *</label>
+    <select class="inp" id="r-tipo" onchange="onRTipo()">
+      <option>Venda de Animal</option><option>Venda de Ovos</option><option>Venda de Leite</option><option>Outros</option>
+    </select>
+  </div>
+  <!-- Lote -->
+  <div class="fg" id="r-lote-fg" style="display:none"><label class="lbl">Lote</label>
+    <select class="inp" id="r-lote"><option value="">— Sem lote específico —</option></select>
+  </div>
+  <div class="fg"><label class="lbl">Descrição *</label><input class="inp" id="r-desc" placeholder="ex: Venda 3 novilhos"></div>
+  <!-- Animal -->
+  <div id="blk-animal" style="background:#060d1f;border:1px solid #1a2d5a;border-radius:12px;padding:14px;margin-bottom:12px;display:none;">
+    <div style="font-size:12px;color:var(--green);font-weight:700;margin-bottom:10px;">🐄 VENDA DE ANIMAL</div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">Peso (kg)</label><input class="inp" type="number" id="r-kg" placeholder="450" oninput="calcKgV('r-kg','r-pkg','r-val')"></div>
+      <div class="fg"><label class="lbl">R$/kg</label><input class="inp" type="number" id="r-pkg" placeholder="12.50" step="0.01" oninput="calcKgV('r-kg','r-pkg','r-val')"></div>
+    </div>
+    <div class="fg"><label class="lbl">Qtd. Animais</label><input class="inp" type="number" id="r-nanim" placeholder="3"></div>
+  </div>
+  <!-- Ovos -->
+  <div id="blk-ovos" style="background:#060d1f;border:1px solid #1a2d5a;border-radius:12px;padding:14px;margin-bottom:12px;display:none;">
+    <div style="font-size:12px;color:var(--yellow);font-weight:700;margin-bottom:10px;">🥚 VENDA DE OVOS</div>
+    <div class="row2">
+      <div class="fg"><label class="lbl">Dúzias</label><input class="inp" type="number" id="r-dz" placeholder="120" oninput="calcKgV('r-dz','r-pdz','r-val')"></div>
+      <div class="fg"><label class="lbl">R$/dúzia</label><input class="inp" type="number" id="r-pdz" placeholder="8.00" step="0.01" oninput="calcKgV('r-dz','r-pdz','r-val')"></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Valor Total (R$) *</label><input class="inp" type="number" id="r-val" placeholder="12000.00"></div>
+  <div class="fg"><label class="lbl">Data *</label><input class="inp" type="date" id="r-dt"></div>
+  <div class="fg"><label class="lbl">Observação</label><input class="inp" id="r-obs" placeholder="opcional"></div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn b-blue" style="flex:1" onclick="salvarRec()">Lançar</button>
+    <button class="btn b-out" style="flex:1" onclick="cm('md-rec')">Cancelar</button>
+  </div>
+</div></div>
+
+<!-- Credores -->
+<div class="mbg" id="md-cred"><div class="modal">
+  <div class="mhandle"></div><div class="mt" id="md-cred-title">👤 Credores</div>
+  <div id="cr-lista"></div>
+  <div style="background:var(--bg3);border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-bottom:12px;">
+    <div style="font-size:12px;color:var(--txt2);font-weight:700;margin-bottom:10px;">➕ Novo Credor</div>
+    <div class="fg"><label class="lbl">Nome *</label><input class="inp" id="cr-nome" placeholder="ex: João Silva"></div>
+    <div class="fg"><label class="lbl">Cor</label><div class="cpick" id="cr-cp">
+      <div class="copt sel" data-c="#4ade80" style="background:#4ade80" onclick="pc(this,'cr')"></div>
+      <div class="copt" data-c="#3b82f6" style="background:#3b82f6" onclick="pc(this,'cr')"></div>
+      <div class="copt" data-c="#f87171" style="background:#f87171" onclick="pc(this,'cr')"></div>
+      <div class="copt" data-c="#fbbf24" style="background:#fbbf24" onclick="pc(this,'cr')"></div>
+      <div class="copt" data-c="#a78bfa" style="background:#a78bfa" onclick="pc(this,'cr')"></div>
+      <div class="copt" data-c="#fb923c" style="background:#fb923c" onclick="pc(this,'cr')"></div>
+    </div></div>
+    <button class="btn b-blue b-full" onclick="addCr()">Adicionar</button>
+  </div>
+  <button class="btn b-out b-full" onclick="cm('md-cred')">Fechar</button>
+</div></div>
+
+<script>
+// ══════════════════ STATE ══════════════════
+let DB = JSON.parse(localStorage.getItem('af7')||'null') || {fazendas:[]};
+let FID=null, AID=null, TAB='dash', FCAT='Todos', FLOTE='Todos', CE={};
+let PCO = {sf:'#3b82f6', nf:'#3b82f6', na:'#4ade80', cr:'#4ade80'};
+let MODO='val';
+
+const sv  = ()=> localStorage.setItem('af7',JSON.stringify(DB));
+const uid = ()=> Date.now().toString(36)+Math.random().toString(36).slice(2,4);
+const fR  = v => 'R$ '+parseFloat(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fD  = d => { if(!d)return'—'; const[y,m,dy]=d.split('-'); return dy+'/'+m+'/'+y; };
+const hoje= ()=> new Date().toISOString().split('T')[0];
+const ini = n => n.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+const faz = ()=> DB.fazendas.find(f=>f.id===FID);
+const atv = ()=> { const f=faz(); const a=f&&f.atividades.find(a=>a.id===AID); if(a&&!a.credores){ Object.defineProperty(a,'credores',{get:()=>faz()&&faz().credores||[],configurable:true}); } return a; };
+const credores = ()=> { const f=faz(); return f&&f.credores||[]; };
+const temLotes = ()=> { const a=atv(); return a&&a.lotes&&a.lotes.length>0; };
+const tipBadge = t=>({'Ração':'bv-yellow','Medicamentos':'bv-blue','Mão de obra':'bv-purple','Sal Mineral':'bv-cyan','Venda de Animal':'bv-green','Venda de Leite':'bv-green','Venda de Ovos':'bv-green','Outros':'bv-blue'})[t]||'bv-blue';
+
+// ══════════════════ SCREENS ══════════════════
+function goSc(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); }
+function om(id){ 
+  document.getElementById(id).classList.add('on'); 
+  if(id==='md-cred'){
+    const f=faz();
+    const titEl=document.getElementById('md-cred-title');
+    if(titEl&&f) titEl.textContent='👤 Credores — '+f.nome;
+    rCrLista();
+  }
+}
+function cm(id){ document.getElementById(id).classList.remove('on'); }
+function pc(el,g){ document.querySelectorAll('#'+g+'-cp .copt').forEach(e=>e.classList.remove('sel')); el.classList.add('sel'); PCO[g]=el.dataset.c; }
+
+function boot(){
+  if(DB.fazendas.length===0) goSc('sc-setup');
+  else { goSc('sc-fazendas'); rFazendas(); }
+}
+
+// ══════════════════ SETUP ══════════════════
+function setupCriar(){
+  const nome=document.getElementById('sf-nome').value.trim();
+  if(!nome){alert('Informe o nome!');return;}
+  DB.fazendas.push({id:uid(),nome,resp:document.getElementById('sf-resp').value,cor:PCO.sf,atividades:[],credores:[]});
+  sv(); goSc('sc-fazendas'); rFazendas();
+}
+
+// ══════════════════ FAZENDAS ══════════════════
+function rFazendas(){
+  const bd=document.getElementById('bd-fazendas');
+  let h='';
+  if(DB.fazendas.length>1){
+    const totD=DB.fazendas.reduce((s,f)=>s+f.atividades.reduce((ss,a)=>ss+a.despesas.reduce((sss,d)=>sss+d.valor,0),0),0);
+    const totR=DB.fazendas.reduce((s,f)=>s+f.atividades.reduce((ss,a)=>ss+a.receitas.reduce((sss,r)=>sss+r.valor,0),0),0);
+    const sl=totR-totD;
+    h+=`<div class="hero"><div class="hero-l">Saldo Geral</div>
+      <div class="hero-v" style="color:${sl>=0?'var(--green)':'var(--red)'};margin-top:4px">${sl>=0?'+':''}${fR(sl)}</div>
+      <div style="display:flex;gap:18px;margin-top:10px">
+        <span style="font-size:12px;color:var(--red)">💸 ${fR(totD)}</span>
+        <span style="font-size:12px;color:var(--green)">💵 ${fR(totR)}</span>
+      </div></div>`;
+  }
+  DB.fazendas.forEach(f=>{
+    const tD=f.atividades.reduce((s,a)=>s+a.despesas.reduce((ss,d)=>ss+d.valor,0),0);
+    const tR=f.atividades.reduce((s,a)=>s+a.receitas.reduce((ss,r)=>ss+r.valor,0),0);
+    const sl=tR-tD;
+    h+=`<div class="fcard" onclick="entrarFazenda('${f.id}')">
+      <div class="ficon" style="background:${f.cor}22;border:2px solid ${f.cor}44;font-size:28px;">🏡</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px">${f.nome}</div>
+        <div style="font-size:12px;color:var(--txt3);margin-top:2px">${f.resp?f.resp+' · ':''} ${f.atividades.length} atividade${f.atividades.length!==1?'s':''}</div>
+        <div style="display:flex;gap:12px;margin-top:5px">
+          <span style="font-size:12px;color:var(--red)">💸 ${fR(tD)}</span>
+          <span style="font-size:12px;color:var(--green)">💵 ${fR(tR)}</span>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:${sl>=0?'var(--green)':'var(--red)'}">${sl>=0?'+':''}${fR(sl)}</div>
+        <div style="font-size:20px;color:var(--txt3);margin-top:4px">›</div>
+      </div>
+    </div>`;
+  });
+  if(DB.fazendas.length>0) h+=`<button class="btn b-red b-full b-sm" style="margin-top:4px" onclick="excluirFazenda()">🗑 Excluir fazenda</button>`;
+  bd.innerHTML=h;
+}
+
+function criarFazenda(){
+  const nome=document.getElementById('nf-nome').value.trim();
+  if(!nome){alert('Informe o nome!');return;}
+  DB.fazendas.push({id:uid(),nome,resp:document.getElementById('nf-resp').value,cor:PCO.nf,atividades:[],credores:[]});
+  sv(); cm('md-nf'); document.getElementById('nf-nome').value=''; rFazendas();
+}
+
+function entrarFazenda(id){ FID=id; goSc('sc-atividades'); rAtividades(); }
+function goFazendas(){ FID=null; AID=null; goSc('sc-fazendas'); rFazendas(); }
+
+function excluirFazenda(){
+  const l=DB.fazendas.map((f,i)=>(i+1)+'. '+f.nome).join('\n');
+  const idx=parseInt(prompt('Qual fazenda excluir?\n\n'+l))-1;
+  if(isNaN(idx)||idx<0||idx>=DB.fazendas.length)return;
+  if(!confirm('Excluir "'+DB.fazendas[idx].nome+'"? Todos os dados serão apagados!'))return;
+  DB.fazendas.splice(idx,1); sv();
+  if(DB.fazendas.length===0) goSc('sc-setup'); else rFazendas();
+}
+
+// ══════════════════ ATIVIDADES ══════════════════
+function rAtividades(){
+  const f=faz(); if(!f)return;
+  document.getElementById('tt-faz').textContent=f.nome;
+  const nCr=(f.credores||[]).length; document.getElementById('ts-faz').textContent=(f.resp||'')+(f.resp?' · ':'')+f.atividades.length+' atividade'+(f.atividades.length!==1?'s':'')+(nCr?' · '+nCr+' credor'+(nCr!==1?'es':''):'');
+  const bd=document.getElementById('bd-atividades');
+  if(f.atividades.length===0){
+    bd.innerHTML='<div class="empty"><div class="empty-ico">🌱</div>Nenhuma atividade.<br>Clique em "+ Atividade" para começar.</div>';
+    return;
+  }
+  let h='';
+  f.atividades.forEach(a=>{
+    const tD=a.despesas.reduce((s,d)=>s+d.valor,0);
+    const tR=a.receitas.reduce((s,r)=>s+r.valor,0);
+    const sl=tR-tD;
+    let ab=0; a.despesas.forEach(d=>(d.credores||[]).forEach(c=>{ if(!c.pago)ab+=c.valor; }));
+    h+=`<div class="acard" onclick="entrarAtividade('${a.id}')">
+      <div class="aicon" style="background:${a.cor}22;border:2px solid ${a.cor}44">${a.ico}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px">${a.nome}</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">${a.lotes&&a.lotes.length?a.lotes.length+' lote'+(a.lotes.length!==1?'s':''):'sem lotes'}</div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <span style="font-size:12px;color:var(--red)">💸 ${fR(tD)}</span>
+          <span style="font-size:12px;color:var(--green)">💵 ${fR(tR)}</span>
+          ${ab>0?`<span style="font-size:12px;color:var(--yellow)">⏳ ${fR(ab)}</span>`:''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:${sl>=0?'var(--green)':'var(--red)'}">${sl>=0?'+':''}${fR(sl)}</div>
+        <div style="font-size:19px;color:var(--txt3);margin-top:4px">›</div>
+      </div>
+    </div>`;
+  });
+  bd.innerHTML=h;
+}
+
+function onNaTipo(){
+  const v=document.getElementById('na-tipo').value.split('|');
+  document.getElementById('na-nome').value=v[1]||'';
+}
+
+function criarAtividade(){
+  const f=faz(); if(!f)return;
+  const nome=document.getElementById('na-nome').value.trim();
+  if(!nome){alert('Informe o nome!');return;}
+  const tp=document.getElementById('na-tipo').value.split('|');
+  f.atividades.push({id:uid(),ico:tp[0],nome,cor:PCO.na,lotes:[],despesas:[],receitas:[]});
+  sv(); cm('md-natv'); document.getElementById('na-nome').value=''; rAtividades();
+}
+
+function entrarAtividade(id){
+  AID=id; TAB='dash'; FCAT='Todos'; FLOTE='Todos'; CE={};
+  const a=atv();
+  document.getElementById('tt-atv').textContent=a.ico+' '+a.nome;
+  document.getElementById('ts-atv').textContent=faz().nome;
+  goSc('sc-interna'); setTab('dash');
+}
+
+function goAtividades(){ AID=null; goSc('sc-atividades'); rAtividades(); }
+
+// ══════════════════ TABS ══════════════════
+function setTab(t){
+  TAB=t; FCAT='Todos'; FLOTE='Todos';
+  document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('on'));
+  document.getElementById('bn-'+t).classList.add('on');
+  rTab();
+}
+function rTab(){
+  const a=atv(); if(!a)return;
+  const bd=document.getElementById('bd-interna');
+  if(TAB==='dash')   bd.innerHTML=tDash(a);
+  else if(TAB==='desp')   bd.innerHTML=tDesp(a);
+  else if(TAB==='rec')    bd.innerHTML=tRec(a);
+  else if(TAB==='contas') bd.innerHTML=tContas(a);
+  else if(TAB==='rel')    bd.innerHTML=tRel(a);
+}
+
+// ══════════════════ DASHBOARD ══════════════════
+function tDash(a){
+  const tD=a.despesas.reduce((s,d)=>s+d.valor,0);
+  const tR=a.receitas.reduce((s,r)=>s+r.valor,0);
+  const sl=tR-tD;
+  let ab=0; a.despesas.forEach(d=>(d.credores||[]).forEach(c=>{ if(!c.pago)ab+=c.valor; }));
+  const rec=[...a.despesas.map(d=>({...d,_m:'D'})),...a.receitas.map(r=>({...r,_m:'R'}))]
+    .sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,5);
+  return `
+    <div class="hero">
+      <div class="hero-l">Saldo — ${a.ico} ${a.nome}</div>
+      <div class="hero-v" style="color:${sl>=0?'var(--green)':'var(--red)'}; margin-top:6px">${sl>=0?'+':''}${fR(sl)}</div>
+    </div>
+    <div class="g2">
+      <div class="stat"><div class="stat-v" style="color:var(--red)">${fR(tD)}</div><div class="stat-l">💸 Despesas</div></div>
+      <div class="stat"><div class="stat-v" style="color:var(--green)">${fR(tR)}</div><div class="stat-l">💵 Receitas</div></div>
+      <div class="stat"><div class="stat-v" style="color:var(--yellow)">${fR(ab)}</div><div class="stat-l">⏳ Em Aberto</div></div>
+      <div class="stat"><div class="stat-v" style="color:var(--green)">${fR(tD-ab)}</div><div class="stat-l">✅ Pago</div></div>
+    </div>
+    ${a.lotes&&a.lotes.length>0?`<div class="card">
+      <div class="card-t">📦 Saldo por Lote</div>
+      ${a.lotes.map(l=>{
+        const ld=a.despesas.filter(d=>d.lote===l.id).reduce((s,d)=>s+d.valor,0);
+        const lr=a.receitas.filter(r=>r.lote===l.id).reduce((s,r)=>s+r.valor,0);
+        const ls=lr-ld;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr)">
+          <div><span class="lbadge">📦 ${l.nome}</span>${l.desc?`<div style="font-size:11px;color:var(--txt3);margin-top:2px">${l.desc}</div>`:''}</div>
+          <div style="text-align:right">
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:${ls>=0?'var(--green)':'var(--red)'}">${ls>=0?'+':''}${fR(ls)}</div>
+            <div style="font-size:11px;color:var(--txt3)">💸 ${fR(ld)} · 💵 ${fR(lr)}</div>
+          </div>
+        </div>`;
+      }).join('')}
+      <button class="btn b-ghost b-sm b-full" style="margin-top:10px" onclick="abrirLotes()">⚙️ Gerenciar Lotes</button>
+    </div>`:
+    `<button class="btn b-ghost b-sm b-full" onclick="abrirLotes()">📦 Gerenciar Lotes</button>`}
+    ${credores().length>0?`<div class="card">
+      <div class="card-t">Credores</div>
+      ${credores().map(cr=>{
+        let cab=0,cpg=0;
+        a.despesas.forEach(d=>(d.credores||[]).filter(c=>c.credorId===cr.id).forEach(c=>{ if(c.pago)cpg+=c.valor; else cab+=c.valor; }));
+        return `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr)">
+          <div class="av" style="width:36px;height:36px;font-size:13px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+          <div style="flex:1;font-weight:600">${cr.nome}</div>
+          <div style="text-align:right">
+            ${cab>0?`<div style="color:var(--yellow);font-size:13px;font-weight:700">⏳ ${fR(cab)}</div>`:''}
+            ${cpg>0?`<div style="color:var(--green);font-size:12px">✅ ${fR(cpg)}</div>`:''}
+            ${cab===0&&cpg===0?`<div style="color:var(--txt3);font-size:12px">—</div>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+    ${rec.length>0?`<div class="card">
+      <div class="card-t">Últimos Lançamentos</div>
+      ${rec.map(x=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bdr)">
+        <div>
+          <div style="font-weight:600;font-size:14px">${x.desc}</div>
+          <div style="font-size:11px;color:var(--txt3);margin-top:2px">${fD(x.data)}${x.lote?' · '+loteName(a,x.lote):''}${x.cat?' · <span class="badge '+tipBadge(x.cat)+'">'+x.cat+'</span>':x.tipo?' · <span class="badge '+tipBadge(x.tipo)+'">'+x.tipo+'</span>':''}</div>
+        </div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:${x._m==='R'?'var(--green)':'var(--red)'}">
+          ${x._m==='R'?'+':'−'}${fR(x.valor)}
+        </div>
+      </div>`).join('')}
+    </div>`:'<div class="empty"><div class="empty-ico">📭</div>Sem lançamentos ainda</div>'}`;
+}
+
+function loteName(a,lid){ const l=a.lotes&&a.lotes.find(x=>x.id===lid); return l?'📦 '+l.nome:''; }
+
+// ══════════════════ LOTES ══════════════════
+function abrirLotes(){
+  const a=atv(); if(!a)return;
+  document.getElementById('md-lotes-title').textContent='📦 Lotes — '+a.ico+' '+a.nome;
+  document.getElementById('nl-nome').value='';
+  document.getElementById('nl-desc').value='';
+  rLotesLista();
+  om('md-lotes');
+}
+
+function rLotesLista(){
+  const a=atv(); if(!a)return;
+  const el=document.getElementById('md-lotes-lista');
+  if(!a.lotes||a.lotes.length===0){el.innerHTML='<div style="color:var(--txt3);font-size:13px;text-align:center;padding:10px;margin-bottom:10px">Nenhum lote cadastrado</div>';return;}
+  el.innerHTML='<div style="margin-bottom:14px">'+a.lotes.map(l=>{
+    const ld=a.despesas.filter(d=>d.lote===l.id).reduce((s,d)=>s+d.valor,0);
+    const lr=a.receitas.filter(r=>r.lote===l.id).reduce((s,r)=>s+r.valor,0);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:10px;margin-bottom:6px">
+      <span class="lbadge">📦</span>
+      <div style="flex:1">
+        <div style="font-weight:700">${l.nome}</div>
+        ${l.desc?`<div style="font-size:11px;color:var(--txt3)">${l.desc}</div>`:''}
+        <div style="font-size:11px;color:var(--txt3);margin-top:2px">💸 ${fR(ld)} · 💵 ${fR(lr)}</div>
+      </div>
+      <button class="btn b-red" style="padding:4px 9px;font-size:11px" onclick="delLote('${l.id}')">✕</button>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function criarLote(){
+  const a=atv(); if(!a)return;
+  const nome=document.getElementById('nl-nome').value.trim();
+  if(!nome){alert('Informe o nome!');return;}
+  if(!a.lotes)a.lotes=[];
+  a.lotes.push({id:uid(),nome,desc:document.getElementById('nl-desc').value});
+  sv(); document.getElementById('nl-nome').value=''; document.getElementById('nl-desc').value='';
+  rLotesLista(); rTab();
+}
+
+function delLote(id){
+  const a=atv(); if(!a)return;
+  if(!confirm('Excluir lote? Os lançamentos vinculados perdem o lote mas não são apagados.'))return;
+  a.lotes=a.lotes.filter(l=>l.id!==id);
+  a.despesas.forEach(d=>{ if(d.lote===id)d.lote=null; });
+  a.receitas.forEach(r=>{ if(r.lote===id)r.lote=null; });
+  sv(); rLotesLista(); rTab();
+}
+
+function popLoteSelect(selectId){
+  const a=atv(); if(!a)return;
+  const sel=document.getElementById(selectId);
+  sel.innerHTML='<option value="">— Sem lote específico —</option>';
+  if(a.lotes&&a.lotes.length>0){
+    a.lotes.forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent='📦 '+l.nome+(l.desc?' — '+l.desc:''); sel.appendChild(o); });
+  }
+}
+
+// ══════════════════ DESPESAS ══════════════════
+function tDesp(a){
+  const cats=['Todos','Ração','Medicamentos','Mão de obra','Sal Mineral','Outros'];
+  const lotes=['Todos',...(a.lotes||[]).map(l=>l.id)];
+  let lista=a.despesas.filter(d=>FCAT==='Todos'||d.cat===FCAT).filter(d=>FLOTE==='Todos'||d.lote===FLOTE||(!d.lote&&FLOTE==='sem'));
+  lista=[...lista].sort((x,y)=>new Date(y.data)-new Date(x.data));
+  const tot=lista.reduce((s,d)=>s+d.valor,0);
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:21px">💸 Despesas</div>
+      <button class="btn b-blue b-sm" onclick="abrirDesp()">+ Nova</button>
+    </div>
+    <div class="tabs">${cats.map(c=>`<div class="tab ${FCAT===c?'on':''}" onclick="FCAT='${c}';rTab()">${c}</div>`).join('')}</div>
+    ${a.lotes&&a.lotes.length>0?`<div class="tabs">${['Todos',...a.lotes.map(l=>l.id)].map(lid=>{
+      const nm=lid==='Todos'?'Todos':loteName(a,lid);
+      return `<div class="tab ${FLOTE===lid?'on':''}" onclick="FLOTE='${lid}';rTab()">${nm}</div>`;
+    }).join('')}</div>`:''}
+    <div style="display:flex;justify-content:space-between;padding:2px 2px">
+      <span style="color:var(--txt3);font-size:12px">${lista.length} lançamentos</span>
+      <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--red)">${fR(tot)}</span>
+    </div>
+    ${lista.length===0?'<div class="empty"><div class="empty-ico">📭</div>Nenhuma despesa</div>':''}
+    ${lista.map(d=>dCard(d,a)).join('')}`;
+}
+
+function dCard(d,a){
+  const cs=d.credores||[];
+  const ab=cs.filter(c=>!c.pago).reduce((s,c)=>s+c.valor,0);
+  const qt=ab===0&&cs.length>0;
+  let rows=cs.map((c,ci)=>{
+    const cr=credores().find(x=>x.id===c.credorId)||{nome:c.nome,cor:'#888'};
+    return `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="av" style="width:28px;height:28px;font-size:10px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+        <div><div style="font-size:12px;font-weight:600">${cr.nome}${c.pct?' <span style="font-size:10px;color:var(--txt3)">'+c.pct+'%</span>':''}</div>
+        <div style="font-size:12px;font-weight:700;color:${c.pago?'var(--green)':'var(--yellow)'}">${fR(c.valor)}</div></div>
+      </div>
+      <div style="display:flex;gap:5px">
+        ${c.pago?`<span class="badge bv-paid" style="font-size:10px">✅</span><button class="btn b-red" style="padding:3px 8px;font-size:10px" onclick="tgP('${d.id}',${ci})">↩</button>`
+                :`<span class="badge bv-open" style="font-size:10px">⏳</span><button class="btn b-ok" style="padding:3px 8px;font-size:10px" onclick="tgP('${d.id}',${ci})">✓</button>`}
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="icard">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;${cs.length?'margin-bottom:10px':''}">
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:14px">${d.desc}</div>
+        <div style="font-size:11px;color:var(--txt3);margin-top:3px">${fD(d.data)} · <span class="badge ${tipBadge(d.cat)}">${d.cat}</span>${d.lote?' · '+loteName(atv(),d.lote):''}${d.kg?' · '+d.kg+'kg × R$'+parseFloat(d.vkg).toFixed(2)+'/kg':''}</div>
+        ${d.obs?`<div style="font-size:11px;color:var(--txt3);margin-top:2px">${d.obs}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--red)">${fR(d.valor)}</div>
+        ${qt?'<span class="badge bv-paid" style="font-size:10px">✅ Quitado</span>':ab>0?`<div style="font-size:11px;color:var(--yellow)">⏳ ${fR(ab)}</div>`:''}
+      </div>
+    </div>
+    ${cs.length?`<hr class="dv">${rows}`:''}
+    <div style="text-align:right;margin-top:8px">
+      <button class="btn b-red b-sm" onclick="delD('${d.id}')">🗑 Excluir</button>
+    </div>
+  </div>`;
+}
+
+// ══════════════════ RECEITAS ══════════════════
+function tRec(a){
+  const lista=[...a.receitas].sort((x,y)=>new Date(y.data)-new Date(x.data));
+  const tot=lista.reduce((s,r)=>s+r.valor,0);
+  const lotes=a.lotes&&a.lotes.length>0;
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:21px">💵 Receitas</div>
+      <button class="btn b-blue b-sm" onclick="abrirRec()">+ Nova</button>
+    </div>
+    ${lotes?`<div class="tabs">${['Todos',...a.lotes.map(l=>l.id)].map(lid=>{
+      const nm=lid==='Todos'?'Todos':loteName(a,lid);
+      return `<div class="tab ${FLOTE===lid?'on':''}" onclick="FLOTE='${lid}';rTab()">${nm}</div>`;
+    }).join('')}</div>`:''}
+    <div style="display:flex;justify-content:space-between;padding:2px 2px">
+      <span style="color:var(--txt3);font-size:12px">${lista.length} lançamentos</span>
+      <span style="font-family:'Syne',sans-serif;font-weight:800;color:var(--green)">${fR(tot)}</span>
+    </div>
+    ${lista.length===0?'<div class="empty"><div class="empty-ico">📭</div>Nenhuma receita</div>':''}
+    ${lista.map(r=>`<div class="icard">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:14px">${r.desc}</div>
+          <div style="font-size:11px;color:var(--txt3);margin-top:3px">${fD(r.data)} · <span class="badge ${tipBadge(r.tipo)}">${r.tipo}</span>${r.lote?' · '+loteName(a,r.lote):''}</div>
+          ${r.kg?`<div style="font-size:11px;color:var(--green);margin-top:2px">⚖️ ${r.kg}kg × R$${parseFloat(r.pkg).toFixed(2)}/kg${r.nanim?' · '+r.nanim+' animais':''}</div>`:''}
+          ${r.dz?`<div style="font-size:11px;color:var(--yellow);margin-top:2px">🥚 ${r.dz}dz × R$${parseFloat(r.pdz).toFixed(2)}/dz</div>`:''}
+          ${r.obs?`<div style="font-size:11px;color:var(--txt3);margin-top:2px">${r.obs}</div>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--green)">+${fR(r.valor)}</div>
+          <button class="btn b-red b-sm" onclick="delR('${r.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('')}`;
+}
+
+// ══════════════════ CONTAS ══════════════════
+function tContas(a){
+  if(!credores().length) return '<div class="empty"><div class="empty-ico">👤</div>Nenhum credor.<br><button class="btn b-blue" style="margin-top:12px" onclick="om(\'md-cred\')">+ Cadastrar</button></div>';
+  return `<div style="font-family:'Syne',sans-serif;font-weight:800;font-size:21px;margin-bottom:4px">👥 Contas</div>
+    ${credores().map(cr=>{
+      const lans=[];let ab=0,pg=0;
+      a.despesas.forEach(d=>(d.credores||[]).filter(c=>c.credorId===cr.id).forEach(c=>{
+        lans.push({data:d.data,desc:d.desc,cat:d.cat,lote:d.lote,valor:c.valor,pago:c.pago,did:d.id,idx:d.credores.indexOf(c)});
+        if(c.pago)pg+=c.valor; else ab+=c.valor;
+      }));
+      lans.sort((x,y)=>new Date(y.data)-new Date(x.data));
+      const isOpen=CE[cr.id];
+      return `<div class="icard">
+        <div class="chd" onclick="togCE('${cr.id}')">
+          <div class="av" style="width:44px;height:44px;font-size:16px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:16px">${cr.nome}</div>
+            <div style="font-size:11px;color:var(--txt3)">${lans.length} lançamento${lans.length!==1?'s':''}</div>
+          </div>
+          <div style="text-align:right;margin-right:8px">
+            ${ab>0?`<div style="color:var(--yellow);font-weight:700;font-size:14px">⏳ ${fR(ab)}</div>`:''}
+            ${pg>0?`<div style="color:var(--green);font-size:12px">✅ ${fR(pg)}</div>`:''}
+            ${ab===0&&pg===0?`<div style="color:var(--txt3);font-size:12px">—</div>`:''}
+          </div>
+          <div style="color:var(--txt3);font-size:17px">${isOpen?'▲':'▼'}</div>
+        </div>
+        <div class="cbd ${isOpen?'on':''}">
+          <div class="g3" style="margin:12px 0;">
+            <div class="stat" style="padding:10px;text-align:center"><div style="font-weight:800;font-size:15px;color:var(--red)">${fR(ab+pg)}</div><div style="font-size:10px;color:var(--txt3)">Total</div></div>
+            <div class="stat" style="padding:10px;text-align:center"><div style="font-weight:800;font-size:15px;color:var(--yellow)">${fR(ab)}</div><div style="font-size:10px;color:var(--txt3)">⏳ Aberto</div></div>
+            <div class="stat" style="padding:10px;text-align:center"><div style="font-weight:800;font-size:15px;color:var(--green)">${fR(pg)}</div><div style="font-size:10px;color:var(--txt3)">✅ Pago</div></div>
+          </div>
+          ${lans.map(l=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)">
+            <div>
+              <div style="font-size:13px;font-weight:600">${l.desc}</div>
+              <div style="font-size:11px;color:var(--txt3)">${fD(l.data)}${l.lote?' · '+loteName(a,l.lote):''} · <span class="badge ${tipBadge(l.cat)}">${l.cat}</span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:7px">
+              <div style="text-align:right">
+                <div style="font-weight:700;font-size:13px;color:${l.pago?'var(--green)':'var(--yellow)'}">${fR(l.valor)}</div>
+                ${l.pago?'<span class="badge bv-paid" style="font-size:10px">✅</span>':'<span class="badge bv-open" style="font-size:10px">⏳</span>'}
+              </div>
+              ${l.pago?`<button class="btn b-red" style="padding:4px 8px;font-size:10px" onclick="tgP('${l.did}',${l.idx})">↩</button>`
+                      :`<button class="btn b-ok" style="padding:4px 8px;font-size:10px" onclick="tgP('${l.did}',${l.idx})">✓</button>`}
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}`;
+}
+function togCE(id){ CE[id]=!CE[id]; rTab(); }
+
+// ══════════════════ RELATÓRIO ══════════════════
+function tRel(a){
+  const tD=a.despesas.reduce((s,d)=>s+d.valor,0);
+  const tR=a.receitas.reduce((s,r)=>s+r.valor,0);
+  const porCat={};
+  a.despesas.forEach(d=>{ porCat[d.cat]=(porCat[d.cat]||0)+d.valor; });
+  return `
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:21px;margin-bottom:4px">📋 Relatório</div>
+    <div class="card">
+      <div class="card-t">👤 Por Credor</div>
+      ${credores().map(cr=>{
+        const lans=[];let ab=0,pg=0;
+        a.despesas.forEach(d=>(d.credores||[]).filter(c=>c.credorId===cr.id).forEach(c=>{ lans.push({...d,valor:c.valor,pago:c.pago}); if(c.pago)pg+=c.valor; else ab+=c.valor; }));
+        return `<div style="background:var(--bg3);border:1px solid var(--bdr);border-radius:12px;padding:14px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="av" style="width:38px;height:38px;font-size:14px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+            <div style="flex:1"><div style="font-weight:800;font-size:15px">${cr.nome}</div><div style="font-size:11px;color:var(--txt3)">${lans.length} lançamentos</div></div>
+          </div>
+          <div class="g3" style="margin-bottom:10px">
+            <div style="background:var(--bg);border-radius:8px;padding:8px;text-align:center"><div style="font-weight:800;font-size:13px;color:var(--red)">${fR(ab+pg)}</div><div style="font-size:9px;color:var(--txt3)">Total</div></div>
+            <div style="background:var(--bg);border-radius:8px;padding:8px;text-align:center"><div style="font-weight:800;font-size:13px;color:var(--yellow)">${fR(ab)}</div><div style="font-size:9px;color:var(--txt3)">⏳ Aberto</div></div>
+            <div style="background:var(--bg);border-radius:8px;padding:8px;text-align:center"><div style="font-weight:800;font-size:13px;color:var(--green)">${fR(pg)}</div><div style="font-size:9px;color:var(--txt3)">✅ Pago</div></div>
+          </div>
+          <button class="btn b-pdf" onclick="pdfCr('${cr.id}')">📄 PDF — ${cr.nome}</button>
+        </div>`;
+      }).join('')}
+    </div>
+    ${a.lotes&&a.lotes.length>0?`<div class="card">
+      <div class="card-t">📦 Por Lote</div>
+      ${a.lotes.map(l=>{
+        const ld=a.despesas.filter(d=>d.lote===l.id).reduce((s,d)=>s+d.valor,0);
+        const lr=a.receitas.filter(r=>r.lote===l.id).reduce((s,r)=>s+r.valor,0);
+        const ls=lr-ld;
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bdr)">
+          <div><span class="lbadge">📦 ${l.nome}</span>${l.desc?`<div style="font-size:11px;color:var(--txt3);margin-top:2px">${l.desc}</div>`:''}</div>
+          <div style="text-align:right">
+            <div style="font-family:'Syne',sans-serif;font-weight:800;color:${ls>=0?'var(--green)':'var(--red)'}">${ls>=0?'+':''}${fR(ls)}</div>
+            <div style="font-size:11px;color:var(--txt3)">💸 ${fR(ld)} · 💵 ${fR(lr)}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+    <div class="card">
+      <div class="card-t">📦 Por Categoria</div>
+      ${Object.entries(porCat).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr)">
+          <span class="badge ${tipBadge(cat)}">${cat}</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;color:var(--txt3)">${tD>0?(val/tD*100).toFixed(1):0}%</span>
+            <span style="font-weight:700;color:var(--red)">${fR(val)}</span>
+          </div>
+        </div>`).join('')}
+      ${Object.keys(porCat).length===0?'<div class="empty" style="padding:16px"><div class="empty-ico" style="font-size:32px">📭</div>Sem despesas</div>':''}
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:800;font-size:14px;border-top:2px solid var(--bdr2);margin-top:4px">
+        <span>💸 Despesas</span><span style="color:var(--red)">${fR(tD)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-weight:800;font-size:14px">
+        <span>💵 Receitas</span><span style="color:var(--green)">${fR(tR)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:800;font-size:17px;border-top:2px solid var(--bdr2);margin-top:4px">
+        <span>Saldo</span><span style="color:${tR-tD>=0?'var(--green)':'var(--red)'}">${tR-tD>=0?'+':''}${fR(tR-tD)}</span>
+      </div>
+      <button class="btn b-pdf" style="margin-top:8px" onclick="pdfAtv()">📄 PDF Completo</button>
+    </div>`;
+}
+
+// ══════════════════ MODAL DESPESA ══════════════════
+function abrirDesp(){
+  const a=atv(); if(!a)return;
+  ['d-desc','d-obs','d-kg','d-vkg','d-skg','d-svkg','d-val'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  document.getElementById('d-cat').value='Ração';
+  document.getElementById('d-dt').value=hoje();
+  MODO='val';
+  onDCat();
+  setModo('val');
+  // lote
+  if(a.lotes&&a.lotes.length>0){
+    document.getElementById('d-lote-fg').style.display='block';
+    popLoteSelect('d-lote');
+  } else { document.getElementById('d-lote-fg').style.display='none'; }
+  document.getElementById('d-diff').style.display='none';
+  om('md-desp');
+}
+
+function onDCat(){
+  const c=document.getElementById('d-cat').value;
+  document.getElementById('blk-racao').style.display=c==='Ração'?'block':'none';
+  document.getElementById('blk-sal').style.display=c==='Sal Mineral'?'block':'none';
+}
+
+function calcKgV(idkg,idvkg,idtot){
+  const k=parseFloat(document.getElementById(idkg).value)||0;
+  const v=parseFloat(document.getElementById(idvkg).value)||0;
+  if(k>0&&v>0) document.getElementById(idtot).value=(k*v).toFixed(2);
+  if(idtot==='d-val') dDiff();
+}
+
+function setModo(m){
+  MODO=m;
+  const isV=m==='val';
+  document.getElementById('btn-mv').style.cssText=`flex:1;padding:8px;font-size:12px;background:${isV?'var(--blue3)':'var(--bg3)'};color:${isV?'#fff':'var(--txt2)'};border-radius:8px;border:${isV?'none':'1px solid var(--bdr2)'};cursor:pointer;font-weight:700;`;
+  document.getElementById('btn-mp').style.cssText=`flex:1;padding:8px;font-size:12px;background:${!isV?'var(--blue3)':'var(--bg3)'};color:${!isV?'#fff':'var(--txt2)'};border-radius:8px;border:${!isV?'none':'1px solid var(--bdr2)'};cursor:pointer;font-weight:700;`;
+  rCredInputs();
+}
+
+function rCredInputs(){
+  const a=atv(); if(!a)return;
+  const ci=document.getElementById('d-cred-inputs');
+  if(!credores().length){ ci.innerHTML='<div style="color:var(--txt3);font-size:13px;text-align:center;padding:8px">Sem credores. <a href="#" onclick="om(\'md-cred\')" style="color:var(--blue)">Cadastrar</a></div>'; return; }
+  if(MODO==='val'){
+    ci.innerHTML=credores().map(cr=>`<div class="crrow">
+      <div class="av" style="width:34px;height:34px;font-size:12px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:4px">${cr.nome}</div>
+      <input class="inp" type="number" placeholder="R$ 0,00" id="cv-${cr.id}" oninput="dDiff()" style="padding:8px 11px;font-size:14px"></div>
+    </div>`).join('');
+  } else {
+    ci.innerHTML=credores().map(cr=>`<div class="crrow">
+      <div class="av" style="width:34px;height:34px;font-size:12px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+      <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:4px">${cr.nome}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input class="inp" type="number" placeholder="%" id="cp-${cr.id}" min="0" max="100" oninput="dDiff()" style="padding:8px 11px;font-size:14px;max-width:85px">
+        <span id="cpv-${cr.id}" style="font-size:13px;font-weight:700;color:var(--green);min-width:80px">R$ 0,00</span>
+      </div></div>
+    </div>`).join('');
+  }
+  dDiff();
+}
+
+function dDiff(){
+  const a=atv(); if(!a)return;
+  const tot=parseFloat(document.getElementById('d-val').value)||0;
+  const box=document.getElementById('d-diff');
+  let msg='';
+  if(MODO==='pct'){
+    let sp=0;
+    credores().forEach(cr=>{ const el=document.getElementById('cp-'+cr.id); const p=el?parseFloat(el.value)||0:0; sp+=p; const sv2=document.getElementById('cpv-'+cr.id); if(sv2)sv2.textContent=fR(tot*p/100); });
+    const df=100-sp;
+    if(tot>0){ if(Math.abs(df)<0.01) msg='ok:✅ 100%! Total: '+fR(tot); else if(df>0) msg='warn:⚠️ Faltam '+df.toFixed(1)+'%'; else msg='err:❌ Excedeu '+Math.abs(df).toFixed(1)+'%'; }
+  } else {
+    const soma=credores().reduce((s,cr)=>{ const el=document.getElementById('cv-'+cr.id); return s+(el?parseFloat(el.value)||0:0); },0);
+    const df=tot-soma;
+    if(tot>0){ if(Math.abs(df)<0.01) msg='ok:✅ Confere! Total: '+fR(tot); else if(df>0) msg='warn:⚠️ Faltam '+fR(df); else msg='err:❌ Excedeu '+fR(Math.abs(df)); }
+  }
+  if(msg){
+    const[tipo,txt]=msg.split(':');
+    const cores={ok:['#0a2010','#1a4a2a','var(--green)'],warn:['#2d1f00','#5a3a00','var(--yellow)'],err:['#2d0a0a','#5a1a1a','var(--red)']};
+    const[bg,bdr,cl]=cores[tipo];
+    box.style.display='block';
+    box.innerHTML=`<div style="background:${bg};border:1px solid ${bdr};border-radius:8px;padding:9px;color:${cl};font-weight:700;text-align:center;font-size:13px">${txt}</div>`;
+  } else { box.style.display='none'; }
+}
+
+function salvarDesp(){
+  const a=atv();
+  const desc=document.getElementById('d-desc').value.trim();
+  const valor=parseFloat(document.getElementById('d-val').value);
+  const data=document.getElementById('d-dt').value;
+  if(!desc||!valor||!data){alert('Preencha os campos obrigatórios!');return;}
+  const cat=document.getElementById('d-cat').value;
+  let credores;
+  if(MODO==='pct'){
+    credores=(credores()||[]).map(cr=>{ const el=document.getElementById('cp-'+cr.id); const pct=el?parseFloat(el.value)||0:0; return {credorId:cr.id,nome:cr.nome,pct,valor:parseFloat((valor*pct/100).toFixed(2)),pago:false}; }).filter(c=>c.valor>0);
+  } else {
+    credores=(credores()||[]).map(cr=>{ const el=document.getElementById('cv-'+cr.id); const v=el?parseFloat(el.value)||0:0; return {credorId:cr.id,nome:cr.nome,valor:v,pago:false}; }).filter(c=>c.valor>0);
+  }
+  const kg=cat==='Ração'?parseFloat(document.getElementById('d-kg').value)||null:cat==='Sal Mineral'?parseFloat(document.getElementById('d-skg').value)||null:null;
+  const vkg=cat==='Ração'?parseFloat(document.getElementById('d-vkg').value)||null:cat==='Sal Mineral'?parseFloat(document.getElementById('d-svkg').value)||null:null;
+  const loteEl=document.getElementById('d-lote');
+  const lote=loteEl&&loteEl.value?loteEl.value:null;
+  a.despesas.push({id:uid(),cat,desc,valor,data,obs:document.getElementById('d-obs').value,kg,vkg,lote,credores});
+  sv(); cm('md-desp'); rTab();
+}
+
+function tgP(did,ci){ const a=atv(); const d=a.despesas.find(x=>x.id===did); if(d&&d.credores[ci]){d.credores[ci].pago=!d.credores[ci].pago;sv();rTab();} }
+function delD(id){ if(!confirm('Excluir despesa?'))return; const a=atv(); a.despesas=a.despesas.filter(d=>d.id!==id); sv(); rTab(); }
+
+// ══════════════════ MODAL RECEITA ══════════════════
+function abrirRec(){
+  const a=atv(); if(!a)return;
+  ['r-desc','r-obs','r-kg','r-pkg','r-nanim','r-dz','r-pdz','r-val'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r-tipo').value='Venda de Animal';
+  document.getElementById('r-dt').value=hoje();
+  if(a.lotes&&a.lotes.length>0){ document.getElementById('r-lote-fg').style.display='block'; popLoteSelect('r-lote'); }
+  else document.getElementById('r-lote-fg').style.display='none';
+  onRTipo();
+  om('md-rec');
+}
+function onRTipo(){
+  const t=document.getElementById('r-tipo').value;
+  document.getElementById('blk-animal').style.display=t==='Venda de Animal'?'block':'none';
+  document.getElementById('blk-ovos').style.display=t==='Venda de Ovos'?'block':'none';
+}
+function salvarRec(){
+  const a=atv();
+  const desc=document.getElementById('r-desc').value.trim();
+  const valor=parseFloat(document.getElementById('r-val').value);
+  const data=document.getElementById('r-dt').value;
+  if(!desc||!valor||!data){alert('Preencha os campos obrigatórios!');return;}
+  const tipo=document.getElementById('r-tipo').value;
+  const rec={id:uid(),tipo,desc,valor,data,obs:document.getElementById('r-obs').value};
+  if(tipo==='Venda de Animal'){rec.kg=parseFloat(document.getElementById('r-kg').value)||null;rec.pkg=parseFloat(document.getElementById('r-pkg').value)||null;rec.nanim=parseFloat(document.getElementById('r-nanim').value)||null;}
+  if(tipo==='Venda de Ovos'){rec.dz=parseFloat(document.getElementById('r-dz').value)||null;rec.pdz=parseFloat(document.getElementById('r-pdz').value)||null;}
+  const loteEl=document.getElementById('r-lote');
+  rec.lote=loteEl&&loteEl.value?loteEl.value:null;
+  a.receitas.push(rec); sv(); cm('md-rec'); rTab();
+}
+function delR(id){ if(!confirm('Excluir receita?'))return; const a=atv(); a.receitas=a.receitas.filter(r=>r.id!==id); sv(); rTab(); }
+
+// ══════════════════ CREDORES ══════════════════
+function rCrLista(){
+  const a=atv(); if(!a)return;
+  const el=document.getElementById('cr-lista'); if(!el)return;
+  if(!credores().length){el.innerHTML='<div style="color:var(--txt3);font-size:13px;text-align:center;padding:8px;margin-bottom:10px">Nenhum credor</div>';return;}
+  el.innerHTML='<div style="margin-bottom:12px">'+credores().map(cr=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:10px;margin-bottom:6px">
+      <div class="av" style="width:34px;height:34px;font-size:12px;background:${cr.cor};color:#05080f">${ini(cr.nome)}</div>
+      <div style="flex:1;font-weight:600;font-size:14px">${cr.nome}</div>
+      <button class="btn b-red" onclick="delCr('${cr.id}')">✕</button>
+    </div>`).join('')+'</div>';
+}
+function addCr(){
+  const a=atv();
+  const nome=document.getElementById('cr-nome').value.trim();
+  if(!nome){alert('Informe o nome!');return;}
+  const f2=faz(); if(!f2.credores)f2.credores=[]; f2.credores.push({id:uid(),nome,cor:PCO.cr});
+  sv(); document.getElementById('cr-nome').value=''; rCrLista(); rTab();
+}
+function delCr(id){ if(!confirm('Remover credor?'))return; const a=atv(); const f3=faz(); f3.credores=f3.credores.filter(c=>c.id!==id); sv(); rCrLista(); rTab(); }
+
+// ══════════════════ PDFs ══════════════════
+function pdfCr(cid){
+  const a=atv(); const cr=credores().find(x=>x.id===cid); if(!cr)return;
+  const lans=[];let ab=0,pg=0;
+  a.despesas.forEach(d=>(d.credores||[]).filter(c=>c.credorId===cid).forEach(c=>{ lans.push({data:d.data,desc:d.desc,cat:d.cat,lote:d.lote,valor:c.valor,pago:c.pago}); if(c.pago)pg+=c.valor; else ab+=c.valor; }));
+  lans.sort((x,y)=>new Date(y.data)-new Date(x.data));
+  const dh=new Date().toLocaleDateString('pt-BR');
+  const css='@page{margin:18mm 14mm;}*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;font-size:11px;}h1{font-size:18px;font-weight:900;color:#1e3a8a;}.top{display:flex;justify-content:space-between;border-bottom:3px solid #1d4ed8;margin-bottom:14px;padding-bottom:10px;}.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}.box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;text-align:center;}.bv{font-size:16px;font-weight:900;}.bl{font-size:9px;color:#1e40af;font-weight:700;}table{width:100%;border-collapse:collapse;font-size:10px;}th{background:#1d4ed8;color:#fff;padding:7px 5px;text-align:left;}tr:nth-child(even){background:#eff6ff;}td{padding:6px 5px;border-bottom:1px solid #e5e7eb;}.foot{margin-top:14px;font-size:9px;color:#888;border-top:1px solid #ccc;padding-top:6px;display:flex;justify-content:space-between;}';
+  const h='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+css+'</style></head><body>'
+    +'<div class="top"><div><h1>'+a.ico+' '+a.nome+' — '+cr.nome+'</h1><p style="font-size:11px;color:#3b82f6;margin-top:2px">Extrato · '+dh+'</p></div></div>'
+    +'<div class="boxes"><div class="box"><div class="bv" style="color:#dc2626">'+fR(ab+pg)+'</div><div class="bl">TOTAL</div></div><div class="box"><div class="bv" style="color:#d97706">'+fR(ab)+'</div><div class="bl">⏳ EM ABERTO</div></div><div class="box"><div class="bv" style="color:#16a34a">'+fR(pg)+'</div><div class="bl">✅ PAGO</div></div></div>'
+    +'<table><thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Lote</th><th style="text-align:right">Valor</th><th>Status</th></tr></thead><tbody>'
+    +lans.map(l=>'<tr><td>'+fD(l.data)+'</td><td><b>'+l.desc+'</b></td><td>'+l.cat+'</td><td>'+(l.lote?loteName(a,l.lote):'—')+'</td><td style="text-align:right;font-weight:700;color:'+(l.pago?'#16a34a':'#d97706')+'">'+fR(l.valor)+'</td><td>'+(l.pago?'✅ Pago':'⏳ Aberto')+'</td></tr>').join('')
+    +'</tbody></table><div class="foot"><span>AgroFinance · '+faz().nome+' · '+a.ico+' '+a.nome+' · '+cr.nome+'</span><span>Aberto: '+fR(ab)+' | Pago: '+fR(pg)+'</span></div>'
+    +'<script>window.onload=()=>window.print()<\/script></body></html>';
+  window.open(URL.createObjectURL(new Blob([h],{type:'text/html;charset=utf-8'})),'_blank');
+}
+
+function pdfAtv(){
+  const a=atv(); const f=faz();
+  const tD=a.despesas.reduce((s,d)=>s+d.valor,0);
+  const tR=a.receitas.reduce((s,r)=>s+r.valor,0);
+  const sl=tR-tD;
+  const porCat={};
+  a.despesas.forEach(d=>{ porCat[d.cat]=(porCat[d.cat]||0)+d.valor; });
+  const dh=new Date().toLocaleDateString('pt-BR');
+  const css='@page{margin:18mm 14mm;}*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;font-size:11px;}h1{font-size:18px;font-weight:900;color:#1e3a8a;}h2{font-size:12px;color:#1e3a8a;border-left:4px solid #1d4ed8;padding-left:7px;margin:13px 0 7px;}.top{display:flex;justify-content:space-between;border-bottom:3px solid #1d4ed8;margin-bottom:14px;padding-bottom:10px;}.boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;}.box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px;text-align:center;}.bv{font-size:16px;font-weight:900;}.bl{font-size:9px;color:#1e40af;font-weight:700;}table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:10px;}th{background:#1d4ed8;color:#fff;padding:7px 5px;text-align:left;}tr:nth-child(even){background:#eff6ff;}td{padding:6px 5px;border-bottom:1px solid #e5e7eb;}.foot{margin-top:14px;font-size:9px;color:#888;border-top:1px solid #ccc;padding-top:6px;display:flex;justify-content:space-between;}';
+  const desps=[...a.despesas].sort((x,y)=>new Date(y.data)-new Date(x.data));
+  const recs=[...a.receitas].sort((x,y)=>new Date(y.data)-new Date(x.data));
+  let h='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'+css+'</style></head><body>'
+    +'<div class="top"><div><h1>'+a.ico+' '+a.nome+' — Relatório</h1><p style="font-size:11px;color:#3b82f6;margin-top:2px">'+f.nome+' · '+dh+'</p></div></div>'
+    +'<div class="boxes"><div class="box"><div class="bv" style="color:#dc2626">'+fR(tD)+'</div><div class="bl">DESPESAS</div></div><div class="box"><div class="bv" style="color:#16a34a">'+fR(tR)+'</div><div class="bl">RECEITAS</div></div><div class="box"><div class="bv" style="color:'+(sl>=0?'#16a34a':'#dc2626')+'">'+( sl>=0?'+':'')+fR(sl)+'</div><div class="bl">SALDO</div></div></div>';
+  if(a.lotes&&a.lotes.length){
+    h+='<h2>📦 Por Lote</h2><table><thead><tr><th>Lote</th><th style="text-align:right">Despesas</th><th style="text-align:right">Receitas</th><th style="text-align:right">Saldo</th></tr></thead><tbody>';
+    a.lotes.forEach(l=>{ const ld=a.despesas.filter(d=>d.lote===l.id).reduce((s,d)=>s+d.valor,0); const lr=a.receitas.filter(r=>r.lote===l.id).reduce((s,r)=>s+r.valor,0); const ls=lr-ld; h+='<tr><td><b>'+l.nome+'</b>'+( l.desc?' — '+l.desc:'')+'</td><td style="text-align:right;color:#dc2626;font-weight:700">'+fR(ld)+'</td><td style="text-align:right;color:#16a34a;font-weight:700">'+fR(lr)+'</td><td style="text-align:right;font-weight:700;color:'+(ls>=0?'#16a34a':'#dc2626')+'">'+(ls>=0?'+':'')+fR(ls)+'</td></tr>'; });
+    h+='</tbody></table>';
+  }
+  h+='<h2>Despesas por Categoria</h2><table><thead><tr><th>Categoria</th><th style="text-align:right">Total</th><th style="text-align:right">%</th></tr></thead><tbody>'
+    +Object.entries(porCat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>'<tr><td><b>'+c+'</b></td><td style="text-align:right;color:#dc2626;font-weight:700">'+fR(v)+'</td><td style="text-align:right;color:#666">'+(tD>0?(v/tD*100).toFixed(1):0)+'%</td></tr>').join('')
+    +'</tbody></table>'
+    +'<h2>Lançamentos de Despesas</h2><table><thead><tr><th>Data</th><th>Descrição</th><th>Cat.</th><th>Lote</th><th style="text-align:right">Valor</th></tr></thead><tbody>'
+    +desps.map(d=>'<tr><td>'+fD(d.data)+'</td><td><b>'+d.desc+'</b>'+(d.kg?' · '+d.kg+'kg':'')+' </td><td>'+d.cat+'</td><td>'+(d.lote?loteName(a,d.lote):'—')+'</td><td style="text-align:right;color:#dc2626;font-weight:700">'+fR(d.valor)+'</td></tr>').join('')
+    +'</tbody></table>';
+  if(recs.length){
+    h+='<h2>Receitas</h2><table><thead><tr><th>Data</th><th>Descrição</th><th>Tipo</th><th>Lote</th><th style="text-align:right">Valor</th></tr></thead><tbody>'
+      +recs.map(r=>'<tr><td>'+fD(r.data)+'</td><td><b>'+r.desc+'</b></td><td>'+r.tipo+'</td><td>'+(r.lote?loteName(a,r.lote):'—')+'</td><td style="text-align:right;color:#16a34a;font-weight:700">+'+fR(r.valor)+'</td></tr>').join('')
+      +'</tbody></table>';
+  }
+  h+='<div class="foot"><span>AgroFinance · '+f.nome+' · '+a.ico+' '+a.nome+' · '+dh+'</span><span>Desp: '+fR(tD)+' | Rec: '+fR(tR)+' | Saldo: '+(sl>=0?'+':'')+fR(sl)+'</span></div>'
+    +'<script>window.onload=()=>window.print()<\/script></body></html>';
+  window.open(URL.createObjectURL(new Blob([h],{type:'text/html;charset=utf-8'})),'_blank');
+}
+
+// ══════════════════ INIT ══════════════════
+boot();
+</script>
+</body>
+</html>
